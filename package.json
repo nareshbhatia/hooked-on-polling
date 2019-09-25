@@ -1,0 +1,52 @@
+{
+  "name": "hooked-on-polling",
+  "description": "Sample application to demonstrate API polling using React Hooks",
+  "version": "0.1.0",
+  "author": "Naresh Bhatia",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nareshbhatia/hooked-on-polling.git"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "test:prod": "react-scripts test --coverage --watchAll=false",
+    "eject": "react-scripts eject",
+    "format": "prettier --write README.md 'src/**/{*.md,*.json,*.ts*}'"
+  },
+  "dependencies": {
+    "axios": "^0.19.0",
+    "react": "^16.9.0",
+    "react-dom": "^16.9.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^4.1.0",
+    "@testing-library/react": "^9.1.4",
+    "@testing-library/react-hooks": "^2.0.1",
+    "@types/jest": "24.0.18",
+    "@types/node": "12.7.7",
+    "@types/react": "16.9.3",
+    "@types/react-dom": "16.9.1",
+    "prettier": "^1.18.2",
+    "react-scripts": "3.1.2",
+    "react-test-renderer": "16.9.0",
+    "typescript": "3.6.3"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
