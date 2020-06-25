@@ -8,15 +8,15 @@ polls for Apple's stock price every 30 seconds and displays it as shown below.
 
 ## Implementation
 
-At start, the application starts a global heartbeat which is managed using
-`useState`. The heartbeat is triggered every 10 seconds.
+At start, the application starts a [global heartbeat](src/App.tsx) which is
+managed using `useState`. The heartbeat is triggered every 10 seconds.
 
-`usePolling` is the polling hook which listens to the global heartbeat and
-triggers a poll every 30 seconds. To do this, it stores the `lastPollTime` in
-state managed using `useReducer`. When the current heartbeat exceeds
-`lastPollTime + 30 seconds`, `lastPollTime` is reinitialized to the current
-heartbeat time, and a new poll is initiated. After receiving a response from the
-stock service, the result is also saved in state.
+[usePolling](src/hooks/usePolling.ts) is the polling hook which listens to the
+global heartbeat and triggers a poll every 30 seconds. To do this, it stores the
+`lastPollTime` in state managed using `useReducer`. When the current heartbeat
+exceeds `lastPollTime + 30 seconds`, `lastPollTime` is reinitialized to the
+current heartbeat time, and a new poll is initiated. After receiving a response
+from the stock service, the result is also saved in state.
 
 The asynchronous nature of the polling hook necessitates the use of `useReducer`
 (vs. `useState`). Given that we need to update `lastPollTime` before the poll
@@ -62,3 +62,8 @@ yarn test:coverage
 ```
 
 ## References
+
+-   [State Updates May Be Asynchronous](https://blog.logrocket.com/a-guide-to-usestate-in-react-ecb9952e406c/)
+-   [A guide to useState in React](https://blog.logrocket.com/a-guide-to-usestate-in-react-ecb9952e406c/)
+-   [Does useEffect run after every render?](https://reactjs.org/docs/hooks-effect.html#example-using-hooks)
+-   [A Complete Guide to useEffect](https://overreacted.io/a-complete-guide-to-useeffect/)
