@@ -1,16 +1,22 @@
 import axios from 'axios';
+import Debug from 'debug';
 import { StockPrice } from '../models';
 
-const api =
-    'https://cors-anywhere.herokuapp.com/https://financialmodelingprep.com/api/v3';
+const debug = Debug('PricingService');
+
+const apiKey = (window as any)._env_?.STOCK_SERVICE_API_KEY;
+const apiUrl = (window as any)._env_?.STOCK_SERVICE_URL;
 
 async function fetchStockPrice(symbol: string): Promise<StockPrice> {
     const resp = await axios.get(
-        `${api}/stock/real-time-price/${symbol}?datatype=json`
+        `${apiUrl}/stock/real-time-price/${symbol}?apikey=${apiKey}&datatype=json`
     );
-    return resp.data;
+    const stockPrice = resp.data;
+    debug('---> price: %d', stockPrice.price);
+
+    return stockPrice;
 }
 
 export const PricingService = {
-    fetchStockPrice
+    fetchStockPrice,
 };

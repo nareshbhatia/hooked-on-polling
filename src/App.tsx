@@ -1,23 +1,31 @@
 import React from 'react';
-import { HeartbeatContext } from './contexts';
+import Debug from 'debug';
+import { HeartbeatContext, PricingStateProvider } from './contexts';
 import { useInterval } from './hooks';
 import { HomePage } from './HomePage';
+import { formatTime } from './utils';
 
-const App: React.FC = () => {
-    const [heartbeat, setHeartbeat] = React.useState(new Date());
+const debug = Debug('App');
 
-    // Start a 1 second heartbeat
+export const App: React.FC = () => {
+    // Start heartbeat at current time. This will trigger the first poll
+    // as soon as the app starts because initialPricingState.lastPollTime
+    // is set to 0.
+    const [heartbeat, setHeartbeat] = React.useState(new Date().getTime());
+    debug('heartbeat:           %s', formatTime(heartbeat));
+
+    // Start a 10 second heartbeat
     useInterval(() => {
-        setHeartbeat(new Date());
-    }, 1 * 1000);
+        setHeartbeat(new Date().getTime());
+    }, 10000);
 
     return (
         <div className="App">
             <HeartbeatContext.Provider value={heartbeat}>
-                <HomePage />
+                <PricingStateProvider>
+                    <HomePage />
+                </PricingStateProvider>
             </HeartbeatContext.Provider>
         </div>
     );
 };
-
-export default App;

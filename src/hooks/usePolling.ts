@@ -1,40 +1,47 @@
-import React from 'react';
-import { HeartbeatContext } from '../contexts';
-import { PricingContextProps } from '../stores';
+import { useEffect } from 'react';
+import Debug from 'debug';
+import {
+    useHeartbeat,
+    usePricingState,
+    usePricingActionDispatch,
+} from '../contexts';
 import { PricingService } from '../services';
+import { formatTime } from '../utils';
 
-const POLL_INTERVAL = 20 * 1000;
+const debug = Debug('usePolling');
+
+const POLL_INTERVAL = 30 * 1000;
 const SYMBOL = 'AAPL';
 
-const { useContext, useEffect } = React;
-
 /** Executes polling for getting pricing information */
-export const usePolling = ({ state, dispatch }: PricingContextProps) => {
-    const heartbeat = useContext(HeartbeatContext);
+export const usePolling = () => {
+    const heartbeat = useHeartbeat();
+    const state = usePricingState();
+    const dispatch = usePricingActionDispatch();
+
+    const lastPollTime = state.lastPollTime;
 
     useEffect(() => {
         const fetchData = async () => {
             dispatch({ type: 'FETCH_INIT', payload: { pollTime: heartbeat } });
             try {
                 const stockPrice = await PricingService.fetchStockPrice(SYMBOL);
-                // console.log('---> price:', stockPrice.price);
                 dispatch({
                     type: 'FETCH_SUCCESS',
-                    payload: { stockPrice }
+                    payload: { stockPrice },
                 });
             } catch (error) {
                 dispatch({ type: 'FETCH_FAILURE', payload: error });
             }
         };
 
-        if (
-            heartbeat.getTime() - state.lastPollTime.getTime() >=
-            POLL_INTERVAL
-        ) {
-            // console.log('---> lastPollTime:', state.lastPollTime.getTime());
-            // console.log('---> heartbeat:   ', heartbeat.getTime());
-            // console.log('---> polling');
+        if (heartbeat - lastPollTime >= POLL_INTERVAL) {
+            debug(
+                'lastPollTime: %s',
+                lastPollTime > 0 ? formatTime(lastPollTime) : '00:00:00'
+            );
+            debug('    ---> polling');
             fetchData();
         }
-    }, [heartbeat, state, dispatch]);
+    }, [heartbeat, lastPollTime, dispatch]);
 };

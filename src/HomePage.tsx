@@ -1,34 +1,24 @@
-import React from 'react';
-import {
-    INITIAL_PRICING_STATE,
-    PricingContextProps,
-    pricingReducer,
-    PricingStore
-} from './stores';
+import React, { Fragment } from 'react';
+import { usePricingState } from './contexts';
 import { usePolling } from './hooks';
 
 export const HomePage = () => {
-    // Create reducer
-    const [state, dispatch] = React.useReducer(
-        pricingReducer,
-        INITIAL_PRICING_STATE
-    );
-    const pricingContextProps: PricingContextProps = { state, dispatch };
-    const { error, stockPrice } = state;
+    const pricingState = usePricingState();
+    const { error, stockPrice } = pricingState;
 
     // Enable the poller
-    usePolling(pricingContextProps);
+    usePolling();
 
     if (error) {
         return <div data-testid="error">Error: {error.message}</div>;
     }
 
     return (
-        <PricingStore.Provider value={pricingContextProps}>
+        <Fragment>
             <h1>Hooked on Polling!</h1>
             <p data-testid="stock-price">
                 {stockPrice.symbol}: {stockPrice.price}
             </p>
-        </PricingStore.Provider>
+        </Fragment>
     );
 };
